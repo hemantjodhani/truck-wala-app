@@ -5,7 +5,13 @@ import {
   Music, List, X
 } from 'lucide-react';
 
-export default function LocalPlayer({ songs = [], modeName = '', accentColor = '#e63946' }) {
+export default function LocalPlayer({ 
+  songs = [], 
+  modeName = '', 
+  accentColor = '#e63946',
+  showList: showListProp,
+  onToggleList
+}) {
   const audioRef = useRef(null);
   const isInitialLoadRef = useRef(true);
 
@@ -18,7 +24,10 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
   const [isRepeat, setIsRepeat] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const [showList, setShowList] = useState(false);
+  const [showListState, setShowListState] = useState(false);
+
+  const showList = showListProp !== undefined ? showListProp : showListState;
+  const setShowList = onToggleList !== undefined ? onToggleList : setShowListState;
 
   const currentSong = songs[currentIdx] || null;
 
@@ -257,10 +266,10 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
           </div>
 
           {/* Main row */}
-          <div className="flex items-center gap-3 px-2 py-2 pr-4">
+          <div className="flex items-center gap-2 md:gap-3 px-1.5 py-1.5 pr-3 md:px-2 md:py-2 md:pr-4">
 
             {/* Album art — square pill left */}
-            <div className="w-12 h-12 rounded-full shrink-0 overflow-hidden border-2 border-white/10 shadow-lg">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full shrink-0 overflow-hidden border border-white/10 shadow-lg">
               {currentSong?.thumb && !imgError ? (
                 <img
                   src={currentSong.thumb}
@@ -270,24 +279,25 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center" style={{ background: `radial-gradient(circle at 35% 35%, ${accentColor}70, #111)` }}>
-                  <Music size={18} className="text-white/60" />
+                  <Music size={14} className="text-white/60 md:hidden" />
+                  <Music size={18} className="text-white/60 hidden md:block" />
                 </div>
               )}
             </div>
 
             {/* Title + artist + time */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate leading-tight">{currentSong?.title}</p>
-              <p className="text-xs text-white/40 truncate">{currentSong?.artist}</p>
-              <p className="text-[10px] text-white/25 mt-0.5 font-mono">{fmt(currentTime)} / {fmt(duration)}</p>
+              <p className="text-xs md:text-sm font-bold text-white truncate leading-tight">{currentSong?.title}</p>
+              <p className="text-[10px] md:text-xs text-white/40 truncate leading-tight mt-0.5">{currentSong?.artist}</p>
+              <p className="text-[9px] md:text-[10px] text-white/25 mt-0.5 font-mono">{fmt(currentTime)} / {fmt(duration)}</p>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
               {/* Shuffle */}
               <button
                 onClick={() => setIsShuffle(!isShuffle)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition
+                className={`hidden sm:flex w-7.5 h-7.5 md:w-8 md:h-8 rounded-full items-center justify-center transition
                   ${isShuffle ? 'text-white' : 'text-white/35 hover:text-white/70'}`}
                 style={isShuffle ? { color: accentColor } : {}}
               >
@@ -297,39 +307,49 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
               {/* Prev */}
               <button
                 onClick={handlePrev}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white/70 hover:text-white transition"
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white/70 hover:text-white transition"
               >
-                <SkipBack size={16} />
+                <SkipBack size={14} className="md:hidden" />
+                <SkipBack size={16} className="hidden md:block" />
               </button>
 
               {/* Play / Pause — big circle */}
               <button
                 onClick={togglePlay}
-                className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition hover:scale-105 active:scale-95 shrink-0"
+                className="w-9 h-9 md:w-11 md:h-11 rounded-full flex items-center justify-center shadow-lg transition hover:scale-105 active:scale-95 shrink-0"
                 style={{ background: '#ffffff' }}
               >
-                {isPlaying
-                  ? <Pause size={18} fill="#111" stroke="none" />
-                  : <Play size={18} fill="#111" stroke="none" className="translate-x-0.5" />
-                }
+                {isPlaying ? (
+                  <>
+                    <Pause size={14} fill="#111" stroke="none" className="md:hidden" />
+                    <Pause size={18} fill="#111" stroke="none" className="hidden md:block" />
+                  </>
+                ) : (
+                  <>
+                    <Play size={14} fill="#111" stroke="none" className="translate-x-0.5 md:hidden" />
+                    <Play size={18} fill="#111" stroke="none" className="translate-x-0.5 hidden md:block" />
+                  </>
+                )}
               </button>
 
               {/* Next */}
               <button
                 onClick={handleNext}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white/70 hover:text-white transition"
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white/70 hover:text-white transition"
               >
-                <SkipForward size={16} />
+                <SkipForward size={14} className="md:hidden" />
+                <SkipForward size={16} className="hidden md:block" />
               </button>
 
               {/* Playlist */}
               <button
                 onClick={() => setShowList(!showList)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition
+                className={`w-7.5 h-7.5 md:w-8 md:h-8 rounded-full flex items-center justify-center transition
                   ${showList ? 'text-white' : 'text-white/35 hover:text-white/70'}`}
                 style={showList ? { color: accentColor } : {}}
               >
-                <List size={14} />
+                <List size={13} className="md:hidden" />
+                <List size={14} className="hidden md:block" />
               </button>
             </div>
           </div>

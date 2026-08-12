@@ -87,7 +87,7 @@ export default function PlaylistsModal({
                       {mode.hindiTitle}
                     </h3>
                     <p className="text-[11px] text-amber-200/90 font-medium">
-                      {mode.playlist.length} Songs Playlist
+                      {mode.id === 'nauaa' ? 62 : mode.id === 'truck' ? 55 : 30} Songs Playlist
                     </p>
                   </div>
                 </div>

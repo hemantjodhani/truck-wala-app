@@ -21,6 +21,7 @@ export default function App() {
     return MODES.find((m) => m.id === saved) || MODES[0];
   });
   const [isPlaylistsModalOpen, setIsPlaylistsModalOpen] = useState(false);
+  const [showPlaylist, setShowPlaylist] = useState(false);
 
   const handleSelectMode = (newMode) => {
     if (newMode.id === currentMode.id) return;
@@ -42,7 +43,7 @@ export default function App() {
         modes={MODES}
         currentMode={currentMode}
         onSelectMode={handleSelectMode}
-        onOpenSongs={() => {}}
+        onOpenSongs={() => setShowPlaylist(p => !p)}
         onOpenPlaylists={() => setIsPlaylistsModalOpen(true)}
         onPlayHorn={handlePlayHorn}
       />
@@ -55,6 +56,8 @@ export default function App() {
         songs={songs}
         modeName={currentMode.label}
         accentColor={currentMode.accentColor}
+        showList={showPlaylist}
+        onToggleList={setShowPlaylist}
       />
 
       {/* Playlists / Modes Modal */}

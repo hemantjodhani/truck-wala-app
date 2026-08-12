@@ -50,7 +50,9 @@ export default function BackgroundView({ mode, isPlaying, onPlayHorn }) {
       <div className="absolute inset-0 bg-radial-vignette pointer-events-none opacity-40" />
 
       {/* Center Giant Hindi Billboard Title */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-4 pointer-events-none z-10">
+      <div className={`absolute inset-0 flex flex-col items-center justify-center p-4 pointer-events-none z-10 transition-all duration-700
+        ${mode.id === 'nauaa' ? '-translate-y-[14vh] md:-translate-y-[18vh]' : ''}`}
+      >
         <div className="text-center">
           {/* Main Big Retro Hindi Title */}
           <h1 className="hindi-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white tracking-wide drop-shadow-2xl animate-fadeIn">

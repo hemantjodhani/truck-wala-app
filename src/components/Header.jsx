@@ -52,15 +52,16 @@ export default function Header({
   return (
     <header className="fixed top-0 left-0 right-0 z-40 px-4 py-3 flex items-center justify-between pointer-events-none select-none">
       {/* Top Left: Digital Clock & Online Badge */}
-      <div className="flex items-center gap-3 pointer-events-auto">
-        <div className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider font-semibold text-white/90 shadow-md">
+      <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="glass-pill px-2.5 py-1.5 rounded-full text-xs font-mono tracking-wider font-semibold text-white/90 shadow-md hidden sm:block">
           {timeStr || '10:39 PM'}
         </div>
 
         {/* Live Online Badge */}
-        <div className="glass-pill px-3 py-1.5 rounded-full text-xs font-medium text-white/80 flex items-center gap-1.5 shadow-md">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="font-semibold text-emerald-400">{onlineCount}</span> online
+        <div className="glass-pill px-2.5 py-1.5 rounded-full text-xs font-medium text-white/80 flex items-center gap-1 shadow-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="font-semibold text-emerald-400">{onlineCount}</span>
+          <span className="hidden min-[380px]:inline text-white/60">online</span>
         </div>
       </div>
 
