@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Yatra+One&display=swap');
+@import "tailwindcss";
+
+:root {
+  font-family: 'Outfit', sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0b0c10;
+  color: #ffffff;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Custom Hindi Retro Typography */
+.hindi-title {
+  font-family: 'Tiro Devanagari Hindi', 'Yatra One', 'Rozha One', serif;
+  font-weight: 700;
+  line-height: 1.05;
+  text-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.9),
+    0 2px 6px rgba(0, 0, 0, 0.95),
+    3px 3px 0px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.02em;
+}
+
+/* Custom Glassmorphism Player Bar */
+.glass-player {
+  background: rgba(10, 8, 8, 0.82);
+  backdrop-filter: blur(32px) saturate(200%) brightness(0.95);
+  -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(0.95);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.75),
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-pill {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Range input styling for volume and duration */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  margin-top: -4px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.25);
+}
+
+/* Animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* EQ bar bounce for now-playing indicator */
+@keyframes eq-bar {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1.0); }
+}
+
+.eq-bar {
+  display: inline-block;
+  width: 3px;
+  background: currentColor;
+  border-radius: 2px;
+  transform-origin: bottom;
+  animation: eq-bar 0.8s ease-in-out infinite;
+}
+.eq-bar:nth-child(1) { animation-delay: 0ms;   height: 12px; }
+.eq-bar:nth-child(2) { animation-delay: 160ms; height: 16px; }
+.eq-bar:nth-child(3) { animation-delay: 320ms; height: 10px; }
+
+/* Scrollbar styling for song list */
+.glass-player ::-webkit-scrollbar,
+.playlist-drawer ::-webkit-scrollbar {
+  width: 4px;
+}
+.glass-player ::-webkit-scrollbar-track,
+.playlist-drawer ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.glass-player ::-webkit-scrollbar-thumb,
+.playlist-drawer ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 9999px;
+}
+.glass-player ::-webkit-scrollbar-thumb:hover,
+.playlist-drawer ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.3);
+}
