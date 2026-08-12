@@ -86,7 +86,7 @@ export default function Header({
         })}
       </div>
 
-      {/* Top Right: App Actions */}
+      {/* Top Right: Retro Radio Badge */}
       <div className="flex items-center gap-2 pointer-events-auto">
         {/* Mobile Mode Selector */}
         <div className="md:hidden flex items-center glass-pill rounded-full p-1">
@@ -104,34 +104,12 @@ export default function Header({
           ))}
         </div>
 
-
-
-        {/* Playlists Button */}
-        <button
-          onClick={onOpenPlaylists}
-          className="glass-pill px-3 py-1.5 rounded-full text-xs font-medium text-white/90 flex items-center gap-1.5"
-        >
-          <ListMusic className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">Playlists</span>
-        </button>
-
-        {/* Songs Button */}
-        <button
-          onClick={onOpenSongs}
-          className="glass-pill px-3 py-1.5 rounded-full text-xs font-medium text-white/90 flex items-center gap-1.5"
-        >
-          <Music className="w-3.5 h-3.5 text-rose-400" />
-          <span className="hidden sm:inline">Songs</span>
-        </button>
-
-        {/* Install Button */}
-        <button 
-          onClick={() => alert('Add to Home Screen to Install Horn OK App!')}
-          className="glass-pill px-3 py-1.5 rounded-full text-xs font-medium text-white/90 hidden lg:flex items-center gap-1.5"
-        >
-          <Download className="w-3.5 h-3.5 text-sky-400" />
-          <span>Install</span>
-        </button>
+        {/* Retro Broadcast Indicator Slogan */}
+        <div className="glass-pill px-3 py-1.5 rounded-full text-xs font-bold text-amber-300 flex items-center gap-1.5 shadow-md border border-white/5 animate-pulse">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+          <span className="tracking-wider uppercase font-mono hidden sm:inline">FM 90.7 · RETRO BUMPER RADIO 📻</span>
+          <span className="tracking-wider uppercase font-mono sm:hidden">90.7 FM 📻</span>
+        </div>
       </div>
     </header>
   );
