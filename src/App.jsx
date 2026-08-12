@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MODES } from './data/modes';
 import { SALON_SONGS } from './data/salonSongs';
+import { TRUCK_SONGS } from './data/truckSongs';
 import Header from './components/Header';
 import BackgroundView from './components/BackgroundView';
 import LocalPlayer from './components/LocalPlayer';
@@ -9,7 +10,7 @@ import PlaylistsModal from './components/PlaylistsModal';
 // Build the song map per mode
 const MODE_SONGS = {
   nauaa: SALON_SONGS,
-  truck: [],
+  truck: TRUCK_SONGS,
   mistri: [],
 };
 
@@ -42,7 +43,7 @@ export default function App() {
       />
 
       {/* Background Art & Retro Hindi Title */}
-      <BackgroundView mode={currentMode} isPlaying={songs.length > 0} />
+      <BackgroundView mode={currentMode} isPlaying={songs.length > 0} onPlayHorn={handlePlayHorn} />
 
       {/* Beautiful Local Audio Player */}
       <LocalPlayer

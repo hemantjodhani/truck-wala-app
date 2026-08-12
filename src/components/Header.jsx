@@ -103,17 +103,7 @@ export default function Header({
           ))}
         </div>
 
-        {/* Horn Sound Trigger */}
-        {currentMode.hasHorn && (
-          <button
-            onClick={onPlayHorn}
-            className="glass-pill px-3 py-1.5 rounded-full text-xs font-semibold text-amber-300 flex items-center gap-1.5 hover:bg-amber-500/20 active:scale-95 transition"
-            title="Blow Truck Horn!"
-          >
-            <Volume2 className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
-            <span>Horn OK!</span>
-          </button>
-        )}
+
 
         {/* Playlists Button */}
         <button

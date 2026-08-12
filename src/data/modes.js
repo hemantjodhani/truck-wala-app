@@ -1,6 +1,6 @@
 // Pure Mode Data Structure for the 3 Desi Cultural Modes:
 // 1. Nauaa / Deluxe Saloon Mode ("डीलक्स सैलून")
-// 2. Truck Driver Playlist Mode ("हॉर्न ओके प्लीज")
+// 2. Truck Driver Playlist Mode ("ट्रक वाले के गाने")
 // 3. Raju Mistri Mode ("राजू मिस्त्री")
 
 export const MODES = [
@@ -21,7 +21,7 @@ export const MODES = [
     id: 'truck',
     label: 'Truck Driver Playlist',
     shortLabel: 'ट्रक ड्राइवर',
-    hindiTitle: 'हॉर्न ओके प्लीज',
+    hindiTitle: 'ट्रक वाले के गाने',
     subtitle: 'High Voltage Highway Beats',
     bgImage: '/assets/bg.jpg',
     hasHorn: true,
