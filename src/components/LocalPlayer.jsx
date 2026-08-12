@@ -7,6 +7,7 @@ import {
 
 export default function LocalPlayer({ songs = [], modeName = '', accentColor = '#e63946' }) {
   const audioRef = useRef(null);
+  const isInitialLoadRef = useRef(true);
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -21,40 +22,92 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
 
   const currentSong = songs[currentIdx] || null;
 
+  // ── Restore state on modeName or songs changes ──
+  useEffect(() => {
+    if (!songs.length) return;
+    
+    // Get last saved index for this mode
+    const savedIdx = localStorage.getItem('lastSongIdx_' + modeName);
+    const parsedIdx = savedIdx !== null ? parseInt(savedIdx, 10) : 0;
+    const targetIdx = parsedIdx >= 0 && parsedIdx < songs.length ? parsedIdx : 0;
+
+    isInitialLoadRef.current = true;
+    setCurrentIdx(targetIdx);
+  }, [modeName, songs]);
+
   // ── Audio Events ──────────────────────────────────────────────
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const onTime = () => setCurrentTime(audio.currentTime);
+    const onTime = () => {
+      setCurrentTime(audio.currentTime);
+      localStorage.setItem('lastTime_' + modeName, audio.currentTime);
+    };
     const onDur  = () => setDuration(audio.duration || 0);
-    const onEnd  = () => handleNext();
-    const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
+    const onEnd  = () => {
+      // Force next song index update
+      handleNext();
+    };
     audio.addEventListener('timeupdate', onTime);
     audio.addEventListener('durationchange', onDur);
     audio.addEventListener('ended', onEnd);
-    audio.addEventListener('play', onPlay);
-    audio.addEventListener('pause', onPause);
     return () => {
       audio.removeEventListener('timeupdate', onTime);
       audio.removeEventListener('durationchange', onDur);
       audio.removeEventListener('ended', onEnd);
-      audio.removeEventListener('play', onPlay);
-      audio.removeEventListener('pause', onPause);
     };
-  }, []);
+  }, [modeName, songs, currentIdx, isShuffle, isRepeat]);
 
-  // ── Song change ───────────────────────────────────────────────
+  // ── Sync Play/Pause State (User Click/Key Trigger) ──
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !audio.src) return;
+
+    if (isPlaying) {
+      if (audio.paused) {
+        audio.play().catch((err) => {
+          console.log('Playback blocked:', err);
+          setIsPlaying(false);
+        });
+      }
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
+
+  // ── Song Change, Load & Play Executor ──────────────────────────
   useEffect(() => {
     setImgError(false);
     const audio = audioRef.current;
     if (!audio || !currentSong) return;
-    const wasPlaying = isPlaying;
+
+    // Load the new track
     audio.src = currentSong.src;
     audio.load();
-    if (wasPlaying) audio.play().catch(console.error);
-    setCurrentTime(0);
+
+    // Restore saved time position on mount/initial load
+    if (isInitialLoadRef.current) {
+      const savedTime = localStorage.getItem('lastTime_' + modeName);
+      const parsedTime = savedTime !== null ? parseFloat(savedTime) : 0;
+      if (parsedTime > 0) {
+        audio.currentTime = parsedTime;
+        setCurrentTime(parsedTime);
+      } else {
+        setCurrentTime(0);
+      }
+      isInitialLoadRef.current = false;
+    } else {
+      setCurrentTime(0);
+    }
     setDuration(0);
+
+    // Explicitly auto-play the next song if player was actively playing
+    if (isPlaying) {
+      audio.play().catch((err) => {
+        console.log('Autoplay blocked:', err);
+        setIsPlaying(false);
+      });
+    }
   }, [currentIdx, songs]);
 
   // ── Volume ────────────────────────────────────────────────────
@@ -66,30 +119,51 @@ export default function LocalPlayer({ songs = [], modeName = '', accentColor = '
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio || !currentSong) return;
-    isPlaying ? audio.pause() : audio.play().catch(console.error);
+    setIsPlaying(!isPlaying);
   };
 
   const handleNext = useCallback(() => {
     if (!songs.length) return;
-    if (isShuffle) setCurrentIdx(Math.floor(Math.random() * songs.length));
-    else if (isRepeat) { audioRef.current.currentTime = 0; audioRef.current.play().catch(console.error); }
-    else setCurrentIdx(p => (p + 1) % songs.length);
-  }, [songs, isShuffle, isRepeat]);
+    let nextIdx = 0;
+    if (isShuffle) {
+      nextIdx = Math.floor(Math.random() * songs.length);
+    } else if (isRepeat) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(console.error);
+      return;
+    } else {
+      nextIdx = (currentIdx + 1) % songs.length;
+    }
+    setCurrentIdx(nextIdx);
+    localStorage.setItem('lastSongIdx_' + modeName, nextIdx);
+    localStorage.setItem('lastTime_' + modeName, 0);
+  }, [songs, isShuffle, isRepeat, currentIdx, modeName]);
 
   const handlePrev = () => {
     if (!songs.length) return;
-    if (currentTime > 3) { audioRef.current.currentTime = 0; }
-    else setCurrentIdx(p => (p - 1 + songs.length) % songs.length);
+    let prevIdx = 0;
+    if (currentTime > 3) {
+      audioRef.current.currentTime = 0;
+      localStorage.setItem('lastTime_' + modeName, 0);
+    } else {
+      prevIdx = (currentIdx - 1 + songs.length) % songs.length;
+      setCurrentIdx(prevIdx);
+      localStorage.setItem('lastSongIdx_' + modeName, prevIdx);
+      localStorage.setItem('lastTime_' + modeName, 0);
+    }
   };
 
   const handleSeek = (e) => {
     const t = parseFloat(e.target.value);
     audioRef.current.currentTime = t;
     setCurrentTime(t);
+    localStorage.setItem('lastTime_' + modeName, t);
   };
 
   const handleSelectSong = (idx) => {
     setCurrentIdx(idx);
+    localStorage.setItem('lastSongIdx_' + modeName, idx);
+    localStorage.setItem('lastTime_' + modeName, 0);
     setTimeout(() => { audioRef.current?.play().catch(console.error); }, 80);
   };
 

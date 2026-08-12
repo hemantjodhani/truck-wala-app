@@ -7,7 +7,7 @@ export const MODES = [
   {
     id: 'nauaa',
     label: 'Nauaa / Deluxe Saloon',
-    shortLabel: 'सैलून',
+    shortLabel: 'नाई / सैलून',
     hindiTitle: 'डीलक्स सैलून',
     subtitle: 'banger songs that play at indian barber shops',
     bgImage: '/assets/saloon-backdrop-DJP5lZDF.jpg',

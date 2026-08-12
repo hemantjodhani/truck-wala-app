@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MODES } from './data/modes';
 import { SALON_SONGS } from './data/salonSongs';
 import { TRUCK_SONGS } from './data/truckSongs';
+import { MISTRI_SONGS } from './data/mistriSongs';
 import Header from './components/Header';
 import BackgroundView from './components/BackgroundView';
 import LocalPlayer from './components/LocalPlayer';
@@ -11,16 +12,20 @@ import PlaylistsModal from './components/PlaylistsModal';
 const MODE_SONGS = {
   nauaa: SALON_SONGS,
   truck: TRUCK_SONGS,
-  mistri: [],
+  mistri: MISTRI_SONGS,
 };
 
 export default function App() {
-  const [currentMode, setCurrentMode] = useState(MODES[0]);
+  const [currentMode, setCurrentMode] = useState(() => {
+    const saved = localStorage.getItem('lastModeId');
+    return MODES.find((m) => m.id === saved) || MODES[0];
+  });
   const [isPlaylistsModalOpen, setIsPlaylistsModalOpen] = useState(false);
 
   const handleSelectMode = (newMode) => {
     if (newMode.id === currentMode.id) return;
     setCurrentMode(newMode);
+    localStorage.setItem('lastModeId', newMode.id);
   };
 
   const handlePlayHorn = () => {
