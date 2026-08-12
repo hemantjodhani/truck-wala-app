@@ -146,3 +146,14 @@ input[type="range"]:hover::-webkit-slider-thumb {
 .animate-fadeIn {
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Responsive Background Alignments */
+div.bg-truck-mobile {
+  background-position: 0% 50% !important;
+}
+@media (min-width: 640px) {
+  div.bg-truck-mobile {
+    background-position: center !important;
+  }
+}
+

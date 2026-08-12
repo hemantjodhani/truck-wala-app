@@ -4,6 +4,16 @@ import { Volume2 } from 'lucide-react';
 
 export default function BackgroundView({ mode, isPlaying, onPlayHorn }) {
   const [shayriIdx, setShayriIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Only run interval for truck driver mode
@@ -26,8 +36,13 @@ export default function BackgroundView({ mode, isPlaying, onPlayHorn }) {
       {/* Background Image with Vignette */}
       <div
         key={mode.id}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 transform scale-105"
-        style={{ backgroundImage: `url('${mode.bgImage}')` }}
+        className="absolute inset-0 bg-cover bg-no-repeat transition-all duration-1000 transform scale-105"
+        style={{ 
+          backgroundImage: `url('${mode.bgImage}')`,
+          backgroundPosition: isTruckMode 
+            ? (isMobile ? '0% 50%' : 'center') 
+            : 'center'
+        }}
       >
         {/* Subtle motion zoom when playing */}
         <div className={`w-full h-full transition-transform duration-10000 ${isPlaying ? 'scale-105' : 'scale-100'}`} />
@@ -36,10 +51,11 @@ export default function BackgroundView({ mode, isPlaying, onPlayHorn }) {
         {isTruckMode && (
           <button
             onClick={onPlayHorn}
-            className="absolute left-[20.8%] top-[48.5%] -translate-x-1/2 -translate-y-1/2 glass-pill px-3.5 py-2 rounded-full text-xs font-semibold text-amber-300 flex items-center gap-1.5 hover:bg-amber-500/25 active:scale-95 transition pointer-events-auto z-20 shadow-xl border border-white/10"
+            className={`absolute -translate-x-1/2 -translate-y-1/2 glass-pill px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-semibold text-amber-300 flex items-center gap-1 sm:gap-1.5 hover:bg-amber-500/25 active:scale-95 transition pointer-events-auto z-20 shadow-xl border border-white/10
+              ${isMobile ? 'left-[50%] top-[72%]' : 'left-[20.8%] top-[48.5%]'}`}
             title="Blow Truck Horn!"
           >
-            <Volume2 className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
+            <Volume2 className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-amber-400 animate-bounce" />
             <span>Horn OK!</span>
           </button>
         )}
